@@ -61,54 +61,6 @@ type FieldType =
   | 'textarea'; // Texto largo
 ```
 
-### Campos Adicionales Sugeridos
-
-Para una mejor experiencia de desarrollo, considerar agregar:
-
-```json
-{
-  "projectSecondaryFieldID": 48,
-  "projectID": 16,
-  "fieldDefinitionID": 30,
-  "fieldName": "CC QC COMPLT (ADMIN)",
-  "fieldType": "date",
-  "required": true, // ← ¿Es este campo obligatorio?
-  "maxLength": 255, // ← Longitud máxima para strings
-  "minValue": 0, // ← Valor mínimo para números
-  "maxValue": 100, // ← Valor máximo para números
-  "pattern": "^[A-Z0-9-]+$", // ← Patrón regex para validación
-  "options": ["Opción1", "Opción2"], // ← Para campos select/multiselect
-  "placeholder": "Ingrese fecha de finalización", // ← Sugerencia de UI
-  "description": "Fecha en que se completó el QC", // ← Texto de ayuda
-  "deleted": 0,
-  "createDate": "0001-01-01T00:00:00",
-  "userID": 3
-}
-```
-
-## Beneficios
-
-### Para Consumidores de la API (desarrolladores de SDK)
-
-- ✅ Construir SDKs type-safe con tipos TypeScript apropiados
-- ✅ Implementar validación del lado del cliente antes de llamadas a la API
-- ✅ Reducir requests inválidos a la API (mejor rendimiento)
-- ✅ Mejores mensajes de error para usuarios finales
-
-### Para Desarrolladores de UI
-
-- ✅ Renderizar componentes de entrada apropiados automáticamente
-- ✅ Mostrar errores de validación en tiempo real
-- ✅ Mejor experiencia de usuario con autocompletado/sugerencias
-- ✅ Mejoras de accesibilidad (tipos de input apropiados)
-
-### Para la API
-
-- ✅ Menos requests inválidos = menor carga del servidor
-- ✅ Mejor documentación de la API (auto-documentada)
-- ✅ Más fácil de mantener y extender
-- ✅ Validación consistente entre todos los clientes
-
 ## Caso de Uso Ejemplo
 
 **Flujo actual (sin tipos de campo):**
@@ -118,14 +70,6 @@ Para una mejor experiencia de desarrollo, considerar agregar:
 3. Intenta asignar al campo `"HOUR"` el valor `"abc"` (inválido)
 4. La API retorna error 400
 5. El desarrollador tiene que adivinar el formato correcto
-
-**Flujo mejorado (con tipos de campo):**
-
-1. Desarrollador llama `getProjectSecondaryFields(16)`
-2. Ve que el campo `"HOUR"` tiene `fieldType: "number"`
-3. El SDK valida la entrada antes de enviar
-4. Muestra error: "HOUR debe ser un número" inmediatamente
-5. No hay llamada desperdiciada a la API, mejor UX
 
 ## Prioridad de Implementación
 
@@ -144,7 +88,7 @@ Para una mejor experiencia de desarrollo, considerar agregar:
 - ✅ `placeholder` - Sugerencias de UI
 - ✅ `options` - Para campos dropdown
 
-## Alternativa: Endpoint Separado
+## Propuesta a futuro (no critica): Endpoint Separado
 
 Si modificar el endpoint existente no es factible, considerar crear un nuevo endpoint:
 
@@ -173,6 +117,88 @@ Esto permite a los clientes obtener metadata detallada de campos cuando sea nece
 
 ---
 
-## Contacto
+---
 
-Si tiene preguntas sobre estas sugerencias o necesita aclaraciones, por favor contacte al equipo de desarrollo del SDK.
+## Sugerencia 2: Endpoint para Actualizar Tareas Existentes
+
+### ❌ Problema Actual
+
+El endpoint `PUT /api/tasks` actualmente solo permite **crear** nuevas tareas, no actualizar tareas existentes. Esto limita la funcionalidad de la API porque:
+
+- No se pueden modificar tareas ya creadas
+- No se puede cambiar el estado de una tarea (ej: de "In Progress" a "Completed")
+- No se pueden actualizar campos secundarios de tareas existentes
+- No se puede corregir información errónea sin eliminar y recrear la tarea
+
+### ✅ Mejora Sugerida
+
+Implementar uno de los siguientes enfoques:
+
+#### Opción 1: Usar el mismo endpoint con lógica condicional
+
+Modificar `PUT /api/tasks` para que:
+
+- Si el payload incluye un `SystemID`, **actualiza** la tarea existente
+- Si no incluye `SystemID`, **crea** una nueva tarea
+
+```json
+// Crear nueva tarea (comportamiento actual)
+PUT /api/tasks
+{
+  "subProjectID": 45,
+  "jobID": "TEST-001",
+  "estimatedClosingDate": "2025-12-31T00:00:00"
+}
+
+// Actualizar tarea existente (nuevo)
+PUT /api/tasks
+{
+  "SystemID": "SYS-006254",
+  "taskStatusID": 9,
+  "estimatedClosingDate": "2025-12-31T00:00:00"
+}
+```
+
+### Casos de Uso Importantes
+
+1. **Cambiar estado de tarea**
+
+   ```json
+   PUT /api/tasks
+   { "SystemID": "SYS-006254", "taskStatusID": 3 }
+   ```
+
+2. **Actualizar fecha estimada**
+
+   ```json
+   PUT /api/tasks/5671
+   { "estimatedClosingDate": "2025-12-31T00:00:00" }
+   ```
+
+3. **Modificar campos secundarios**
+
+   ```json
+   PUT /api/tasks/5671
+   {
+     "secondaryFields": [
+       { "fieldName": "DESIGNER", "value": "John Doe" }
+     ]
+   }
+   ```
+
+4. **Actualización múltiple**
+   ```json
+   PUT /api/tasks/5671
+   {
+     "taskStatusID": 9,
+     "endDate": "2025-11-20T00:00:00",
+     "secondaryFields": [
+       { "fieldName": "STATUS", "value": "Completed" }
+     ]
+   }
+   ```
+
+### Validaciones Recomendadas
+
+1. **Verificar existencia:** Retornar 404 si el `taskID` no existe
+2. **Validar transiciones de estado:** Algunas transiciones pueden no ser válidas

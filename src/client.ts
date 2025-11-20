@@ -17,6 +17,12 @@ export class DanellaSDK {
 
     this.auth = new AuthResource(this.httpClient, config);
     this.tasks = new TasksResource(this.httpClient);
+
+    // Set up automatic token refresh
+    this.httpClient.setRefreshTokenCallback(async () => {
+      const response = await this.auth.login();
+      return response.access_token;
+    });
   }
 
   /**

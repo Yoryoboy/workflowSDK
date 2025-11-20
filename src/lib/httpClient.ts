@@ -9,6 +9,12 @@ export interface HttpClientConfig {
 export class HttpClient {
   private axiosInstance: AxiosInstance;
   private token: string | null = null;
+  private refreshTokenCallback: (() => Promise<string>) | null = null;
+  private isRefreshing = false;
+  private failedQueue: Array<{
+    resolve: (token: string) => void;
+    reject: (error: Error) => void;
+  }> = [];
 
   constructor(config: HttpClientConfig) {
     this.axiosInstance = axios.create({
@@ -34,12 +40,51 @@ export class HttpClient {
       (error) => Promise.reject(error),
     );
 
-    // Response interceptor: handle errors
+    // Response interceptor: handle errors and token refresh
     this.axiosInstance.interceptors.response.use(
       (response) => response,
-      (error: AxiosError) => {
+      async (error: AxiosError) => {
+        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+
         if (error.response) {
           const { status, data } = error.response;
+
+          // Handle 401 with token refresh
+          if (status === 401 && !originalRequest._retry && this.refreshTokenCallback) {
+            if (this.isRefreshing) {
+              // Queue the request while refreshing
+              return new Promise((resolve, reject) => {
+                this.failedQueue.push({ resolve, reject });
+              })
+                .then((token) => {
+                  if (originalRequest.headers) {
+                    originalRequest.headers.Authorization = `Bearer ${token}`;
+                  }
+                  return this.axiosInstance(originalRequest);
+                })
+                .catch((err) => Promise.reject(err));
+            }
+
+            originalRequest._retry = true;
+            this.isRefreshing = true;
+
+            try {
+              const newToken = await this.refreshTokenCallback();
+              this.token = newToken;
+              this.processQueue(null, newToken);
+
+              if (originalRequest.headers) {
+                originalRequest.headers.Authorization = `Bearer ${newToken}`;
+              }
+
+              return this.axiosInstance(originalRequest);
+            } catch (refreshError) {
+              this.processQueue(refreshError as Error, null);
+              throw new AuthenticationError('Token refresh failed');
+            } finally {
+              this.isRefreshing = false;
+            }
+          }
 
           switch (status) {
             case 401:
@@ -64,6 +109,18 @@ export class HttpClient {
     );
   }
 
+  private processQueue(error: Error | null, token: string | null): void {
+    this.failedQueue.forEach((promise) => {
+      if (error) {
+        promise.reject(error);
+      } else if (token) {
+        promise.resolve(token);
+      }
+    });
+
+    this.failedQueue = [];
+  }
+
   setToken(token: string): void {
     this.token = token;
   }
@@ -74,6 +131,10 @@ export class HttpClient {
 
   getToken(): string | null {
     return this.token;
+  }
+
+  setRefreshTokenCallback(callback: () => Promise<string>): void {
+    this.refreshTokenCallback = callback;
   }
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {

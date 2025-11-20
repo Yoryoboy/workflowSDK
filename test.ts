@@ -19,16 +19,6 @@ async function testAuth() {
     console.log('✅ SDK initialized');
     console.log('🔐 Authenticated:', client.isAuthenticated());
     console.log('🎫 Current token:', client.getToken());
-
-    // Attempt login
-    console.log('\n📡 Attempting login...');
-    const response = await client.auth.login();
-
-    console.log('✅ Login successful!');
-    console.log('🎫 Token received:', response.access_token);
-    console.log('🔒 Token type:', response.token_type);
-    console.log('⏰ Expires in:', response.expires_in, 'seconds');
-    console.log('🔐 Is authenticated:', client.isAuthenticated());
   } catch (error) {
     console.error('❌ Error:', error);
     if (error instanceof Error) {

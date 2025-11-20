@@ -35,6 +35,16 @@ export class HttpClient {
         if (this.token) {
           config.headers.Authorization = `Bearer ${this.token}`;
         }
+
+        // Debug logging
+        if (process.env.DEBUG_API === 'true') {
+          console.log('\n🔍 API Request Debug:');
+          console.log('URL:', `${config.baseURL || ''}${config.url || ''}`);
+          console.log('Method:', config.method?.toUpperCase());
+          console.log('Headers:', JSON.stringify(config.headers, null, 2));
+          console.log('Payload:', JSON.stringify(config.data, null, 2));
+        }
+
         return config;
       },
       (error) => Promise.reject(error),

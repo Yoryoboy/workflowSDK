@@ -6,7 +6,7 @@ import { loadTokenFromCache, saveTokenToCache } from './src/lib/tokenCache';
 dotenv.config();
 
 async function testTasksEndpoints() {
-  console.log('Testing Danella SDK - Tasks Endpoints\n');
+  console.log('Probando Danella SDK - Endpoints de Tareas\n');
 
   try {
     // Initialize SDK
@@ -21,51 +21,55 @@ async function testTasksEndpoints() {
     const cachedToken = await loadTokenFromCache();
     if (cachedToken) {
       client['httpClient'].setToken(cachedToken);
-      console.log('[AUTH] Using cached token\n');
+      console.log('[AUTH] Usando token en caché\n');
     } else {
       // Login and cache token
-      console.log('[AUTH] Logging in...');
+      console.log('[AUTH] Iniciando sesión...');
       const response = await client.auth.login();
       await saveTokenToCache(response.access_token, response.token_type, response.expires_in);
-      console.log('[AUTH] Token cached successfully\n');
+      console.log('[AUTH] Token guardado en caché exitosamente\n');
     }
 
     // Test 1: Get project secondary fields
-    console.log('[TEST 1] Get project secondary fields');
+    console.log('[TEST 1] Obtener campos secundarios del proyecto');
     try {
       const projectId = 16;
       const fields = await client.tasks.getProjectSecondaryFields(projectId);
       console.log(fields);
-      console.log(`[SUCCESS] Retrieved ${fields.length} secondary fields for project ${projectId}`);
+      console.log(
+        `[SUCCESS] Se obtuvieron ${fields.length} campos secundarios para el proyecto ${projectId}`,
+      );
     } catch (error) {
-      console.log('[ERROR] Failed to get project fields:', (error as Error).message);
+      console.log('[ERROR] Error al obtener campos del proyecto:', (error as Error).message);
     }
 
     // Test 2: Get tasks by subproject
-    console.log('\n[TEST 2] Get tasks by subproject');
+    console.log('\n[TEST 2] Obtener tareas por subproyecto');
     try {
       const subProjectId = 32;
       const tasks = await client.tasks.getBySubProject(subProjectId);
 
       console.log(tasks);
-      console.log(`[SUCCESS] Retrieved ${tasks.length} tasks for subproject ${subProjectId}`);
+      console.log(
+        `[SUCCESS] Se obtuvieron ${tasks.length} tareas para el subproyecto ${subProjectId}`,
+      );
     } catch (error) {
-      console.log('[ERROR] Failed to get tasks:', (error as Error).message);
+      console.log('[ERROR] Error al obtener tareas:', (error as Error).message);
     }
 
     // Test 3: Get task by ID
-    console.log('\n[TEST 3] Get task by ID');
+    console.log('\n[TEST 3] Obtener tarea por ID');
     try {
       const taskId = 5671;
       const task = await client.tasks.getById(taskId);
-      console.log(`[SUCCESS] Retrieved task ${taskId}`);
-      console.log('Task details:', task);
+      console.log(`[SUCCESS] Se obtuvo la tarea ${taskId}`);
+      console.log('Detalles de la tarea:', task);
     } catch (error) {
-      console.log('[ERROR] Failed to get task:', (error as Error).message);
+      console.log('[ERROR] Error al obtener tarea:', (error as Error).message);
     }
 
     // Test 4: Update/Create task
-    console.log('\n[TEST 4] Update/Create task');
+    console.log('\n[TEST 4] Actualizar/Crear tarea');
     try {
       const newTask = await client.tasks.update({
         subProjectID: 45,
@@ -73,17 +77,17 @@ async function testTasksEndpoints() {
         estimatedClosingDate: new Date().toISOString(),
         verifierKeyID: 'JB0000000',
       });
-      console.log('[SUCCESS] Task created/updated successfully');
-      console.log('Task:', newTask);
+      console.log('[SUCCESS] Tarea creada/actualizada exitosamente');
+      console.log('Tarea:', newTask);
     } catch (error) {
-      console.log('[ERROR] Failed to update task:', (error as Error).message);
+      console.log('[ERROR] Error al actualizar tarea:', (error as Error).message);
     }
 
-    console.log('\n[DONE] All tests completed');
+    console.log('\n[DONE] Todas las pruebas completadas');
   } catch (error) {
     console.error('[FATAL] Error:', error);
     if (error instanceof Error) {
-      console.error('Message:', error);
+      console.error('Mensaje:', error);
     }
   }
 }

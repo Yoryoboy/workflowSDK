@@ -1,5 +1,6 @@
 import { DanellaSDK } from './src/index';
 import dotenv from 'dotenv';
+import { loadTokenFromCache, saveTokenToCache } from './src/lib/tokenCache';
 
 // Load environment variables
 dotenv.config();
@@ -16,10 +17,18 @@ async function testTasksEndpoints() {
       name: process.env.NAME,
     });
 
-    // Login
-    console.log('📡 Logging in...');
-    await client.auth.login();
-    console.log('✅ Authenticated\n');
+    // Try to load cached token first
+    const cachedToken = await loadTokenFromCache();
+    if (cachedToken) {
+      client['httpClient'].setToken(cachedToken);
+      console.log('✅ Authenticated (from cache)\n');
+    } else {
+      // Login and cache token
+      console.log('📡 Logging in...');
+      const response = await client.auth.login();
+      await saveTokenToCache(response.access_token, response.token_type, response.expires_in);
+      console.log('✅ Authenticated (new token cached)\n');
+    }
 
     // Test 1: Get project secondary fields
     console.log('📋 Test 1: Get project secondary fields');

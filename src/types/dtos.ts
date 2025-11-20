@@ -19,15 +19,52 @@ export interface TaskCreateDto {
 }
 
 /**
- * Response for getting a task by ID
+ * Response for getting a task by ID or list of tasks
  */
 export interface TaskResponse {
-  id: number;
+  taskID: number;
+  taskCode: string;
+  jobID: string;
+  verifierKeyID: string;
+  endCustomerID: number;
+  managerAreaID: number;
+  creationDate: string;
+  startDate: string;
+  estimatedClosingDate: string;
+  endDate: string | null;
+  forecastRevenueAmount: number;
+  forecastCostAmount: number;
+  taskStatusID: number;
+  endCustomerName: string;
+  legalEntityName: string;
+  managerAreaName: string;
+  taskStatusName: string;
+  endCustomer: null | unknown;
+  managerArea: null | unknown;
+  taskStatus: null | unknown;
+  userID: number;
   subProjectID: number;
-  verifierKeyID?: string | null;
-  jobID?: string | null;
-  estimatedClosingDate?: string | null;
-  secondaryFields?: SecondaryFieldDTO[] | null;
-  createdAt?: string;
-  updatedAt?: string;
+  subProjectName: string | null;
+  projectID: number;
+  projectName: string | null;
+  customerName: string;
+  projectTypeID: number;
+  projectType: string;
+  jobTypeID: number;
+  jobType: string;
+  taskProjectCodesStatusID: number;
+  taskProjectCodesStatus: null | unknown;
+  approveDateProjectCodes: string;
+  vendorID: number;
+  vendorName: string;
+  supervisorName: string;
+  designerName: string;
+  costCenter: null | unknown;
+  customerID: number;
+  taskCustomerCostCenterID: number;
+  amount: number | null;
+  internalCost: number | null;
+  vendorCost: number | null;
+  profit: number | null;
+  margin: number | null;
 }

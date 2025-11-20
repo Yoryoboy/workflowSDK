@@ -1,10 +1,24 @@
 /**
- * Secondary field for a task
+ * Secondary field definition for a project
+ * Returned by GET /api/tasks/project-secondary-fields/{projectID}
  */
 export interface SecondaryFieldDTO {
-  taskID?: number;
-  fieldName?: string | null;
-  value?: string | null;
+  projectSecondaryFieldID: number;
+  projectID: number;
+  fieldDefinitionID: number;
+  fieldName: string;
+  deleted: number;
+  createDate: string;
+  userID: number;
+}
+
+/**
+ * Secondary field value for a task
+ * Used when creating/updating tasks
+ */
+export interface TaskSecondaryFieldValue {
+  fieldName: string;
+  value: string | null;
 }
 
 /**
@@ -15,7 +29,7 @@ export interface TaskCreateDto {
   verifierKeyID?: string | null;
   jobID?: string | null;
   estimatedClosingDate?: string | null; // ISO 8601 date-time format
-  secondaryFields?: SecondaryFieldDTO[] | null;
+  secondaryFields?: TaskSecondaryFieldValue[] | null;
 }
 
 /**

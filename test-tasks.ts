@@ -30,37 +30,36 @@ async function testTasksEndpoints() {
       console.log('[AUTH] Token guardado en caché exitosamente\n');
     }
 
-    // Test 1: Get project secondary fields
-    console.log('[TEST 1] Obtener campos secundarios del proyecto');
-    try {
-      const projectId = 16;
-      const fields = await client.tasks.getProjectSecondaryFields(projectId);
-      console.log(fields);
-      console.log(
-        `[SUCCESS] Se obtuvieron ${fields.length} campos secundarios para el proyecto ${projectId}`,
-      );
-    } catch (error) {
-      console.log('[ERROR] Error al obtener campos del proyecto:', (error as Error).message);
-    }
+    // // Test 1: Get project secondary fields
+    // console.log('[TEST 1] Obtener campos secundarios del proyecto');
+    // try {
+    //   const projectId = 16;
+    //   const fields = await client.tasks.getProjectSecondaryFields(projectId);
+    //   console.log(fields);
+    //   console.log(
+    //     `[SUCCESS] Se obtuvieron ${fields.length} campos secundarios para el proyecto ${projectId}`,
+    //   );
+    // } catch (error) {
+    //   console.log('[ERROR] Error al obtener campos del proyecto:', (error as Error).message);
+    // }
 
-    // Test 2: Get tasks by subproject
-    console.log('\n[TEST 2] Obtener tareas por subproyecto');
-    try {
-      const subProjectId = 32;
-      const tasks = await client.tasks.getBySubProject(subProjectId);
+    // // Test 2: Get tasks by subproject
+    // console.log('\n[TEST 2] Obtener tareas por subproyecto');
+    // try {
+    //   const subProjectId = 32;
+    //   const tasks = await client.tasks.getBySubProject(subProjectId);
 
-      console.log(tasks);
-      console.log(
-        `[SUCCESS] Se obtuvieron ${tasks.length} tareas para el subproyecto ${subProjectId}`,
-      );
-    } catch (error) {
-      console.log('[ERROR] Error al obtener tareas:', (error as Error).message);
-    }
+    //   console.log(
+    //     `[SUCCESS] Se obtuvieron ${tasks.length} tareas para el subproyecto ${subProjectId}`,
+    //   );
+    // } catch (error) {
+    //   console.log('[ERROR] Error al obtener tareas:', (error as Error).message);
+    // }
 
     // Test 3: Get task by ID
     console.log('\n[TEST 3] Obtener tarea por ID');
     try {
-      const taskId = 5671;
+      const taskId = 6394;
       const task = await client.tasks.getById(taskId);
       console.log(`[SUCCESS] Se obtuvo la tarea ${taskId}`);
       console.log('Detalles de la tarea:', task);
@@ -75,7 +74,7 @@ async function testTasksEndpoints() {
         subProjectID: 45,
         jobID: 'TEST-001',
         estimatedClosingDate: new Date().toISOString(),
-        verifierKeyID: 'JB0000000',
+        verifierKeyID: 'JB0000001',
       });
       console.log('[SUCCESS] Tarea creada/actualizada exitosamente');
       console.log('Tarea:', newTask);

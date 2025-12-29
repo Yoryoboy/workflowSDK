@@ -1,119 +1,51 @@
 # Danella SDK
 
-A modern TypeScript SDK for interacting with the Danella API.
+SDK moderno en TypeScript para interactuar con la API de Danella Workflow.
 
-## Installation
+## Descripción
 
-```bash
-pnpm add danella-sdk
-# or
-npm install danella-sdk
-# or
-yarn add danella-sdk
-```
+Danella SDK es una biblioteca cliente que simplifica la integración con la API de Danella, proporcionando una interfaz tipada y fácil de usar para gestionar tareas, autenticación y otros recursos del sistema.
 
-## Quick Start
+## Características
 
-```typescript
-import { DanellaSDK } from 'danella-sdk';
+- **TypeScript nativo** - Tipado completo para mejor experiencia de desarrollo y autocompletado
+- **Manejo automático de tokens** - Refresco automático de tokens de autenticación cuando expiran
+- **Gestión de errores tipada** - Errores específicos para diferentes casos (AuthenticationError, NotFoundError, ValidationError)
+- **Cliente HTTP robusto** - Basado en Axios con interceptores configurados para manejo de autenticación
+- **Sistema de caché** - Optimización de tokens para reducir llamadas de autenticación
 
-// Initialize the SDK
-const client = new DanellaSDK({
-  apiKey: 'your-workflow-api-key',
-  userId: 31,
-  employeeId: 5,
-  name: 'Lawrence', // optional
-  baseUrl: 'https://danella-x.com', // optional, defaults to production
-});
+## Recursos disponibles
 
-// Authenticate
-await client.auth.login();
+### Autenticación
 
-// Use the API
-const tasks = await client.tasks.getBySubProject(101);
-const task = await client.tasks.getById(500);
-```
+- Login y logout
+- Verificación de estado de autenticación
+- Obtención de tokens de acceso
+- Refresco automático de tokens
 
-## API Reference
+### Tareas (Tasks)
 
-### Authentication
+- Obtener campos secundarios de proyectos
+- Consultar tareas por subproyecto
+- Obtener detalles de tareas individuales
+- Crear y actualizar tareas con campos personalizados
 
-```typescript
-// Login and get token
-await client.auth.login();
+## Documentación
 
-// Check if authenticated
-if (client.isAuthenticated()) {
-  console.log('Authenticated!');
-}
+Para documentación completa sobre instalación, configuración y uso, consulta:
 
-// Get current token
-const token = client.getToken();
+- **[docs.md](./docs.md)** - Documentación completa de la API con ejemplos
 
-// Logout
-client.auth.logout();
-```
-
-### Tasks
-
-```typescript
-// Get project secondary fields
-const fields = await client.tasks.getProjectSecondaryFields(projectId);
-
-// Get tasks by subproject
-const tasks = await client.tasks.getBySubProject(subProjectId);
-
-// Get task by ID
-const task = await client.tasks.getById(taskId);
-
-// Update or create task
-await client.tasks.update({
-  id: 500,
-  title: 'New task',
-  // ... other fields
-});
-```
-
-## Error Handling
-
-The SDK provides typed errors for better error handling:
-
-```typescript
-import { DanellaSDK, AuthenticationError, NotFoundError } from 'danella-sdk';
-
-try {
-  await client.tasks.getById(999);
-} catch (error) {
-  if (error instanceof AuthenticationError) {
-    console.error('Authentication failed');
-  } else if (error instanceof NotFoundError) {
-    console.error('Task not found');
-  }
-}
-```
-
-## Development
+## Desarrollo
 
 ```bash
-# Install dependencies
-pnpm install
-
-# Build
-pnpm build
-
-# Watch mode
-pnpm dev
-
-# Lint
-pnpm lint
-
-# Format
-pnpm format
-
-# Test
-pnpm test
+pnpm install    # Instalar dependencias
+pnpm build      # Construir el SDK
+pnpm dev        # Modo watch para desarrollo
+pnpm lint       # Linter
+pnpm format     # Formatear código
 ```
 
-## License
+## Licencia
 
 ISC

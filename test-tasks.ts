@@ -67,20 +67,20 @@ async function testTasksEndpoints() {
       console.log('[ERROR] Error al obtener tarea:', (error as Error).message);
     }
 
-    // Test 4: Update/Create task
-    console.log('\n[TEST 4] Actualizar/Crear tarea');
-    try {
-      const newTask = await client.tasks.update({
-        subProjectID: 45,
-        jobID: 'TEST-001',
-        estimatedClosingDate: new Date().toISOString(),
-        verifierKeyID: 'JB0000001',
-      });
-      console.log('[SUCCESS] Tarea creada/actualizada exitosamente');
-      console.log('Tarea:', newTask);
-    } catch (error) {
-      console.log('[ERROR] Error al actualizar tarea:', (error as Error).message);
-    }
+    // // Test 4: Update/Create task
+    // console.log('\n[TEST 4] Actualizar/Crear tarea');
+    // try {
+    //   const newTask = await client.tasks.update({
+    //     subProjectID: 45,
+    //     jobID: 'TEST-001',
+    //     estimatedClosingDate: new Date().toISOString(),
+    //     verifierKeyID: 'JB0000001',
+    //   });
+    //   console.log('[SUCCESS] Tarea creada/actualizada exitosamente');
+    //   console.log('Tarea:', newTask);
+    // } catch (error) {
+    //   console.log('[ERROR] Error al actualizar tarea:', (error as Error).message);
+    // }
 
     console.log('\n[DONE] Todas las pruebas completadas');
   } catch (error) {

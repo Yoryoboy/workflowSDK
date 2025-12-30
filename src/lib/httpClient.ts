@@ -4,6 +4,7 @@ import { DanellaError, AuthenticationError, NotFoundError, ValidationError } fro
 export interface HttpClientConfig {
   baseURL: string;
   timeout?: number;
+  debug?: boolean;
 }
 
 export class HttpClient {
@@ -11,12 +12,14 @@ export class HttpClient {
   private token: string | null = null;
   private refreshTokenCallback: (() => Promise<string>) | null = null;
   private isRefreshing = false;
+  private debug: boolean;
   private failedQueue: Array<{
     resolve: (token: string) => void;
     reject: (error: Error) => void;
   }> = [];
 
   constructor(config: HttpClientConfig) {
+    this.debug = config.debug || false;
     this.axiosInstance = axios.create({
       baseURL: config.baseURL,
       timeout: config.timeout || 30000,
@@ -37,7 +40,7 @@ export class HttpClient {
         }
 
         // Debug logging
-        if (process.env.DEBUG_API === 'true') {
+        if (this.debug) {
           console.log('\n🔍 API Request Debug:');
           console.log('URL:', `${config.baseURL || ''}${config.url || ''}`);
           console.log('Method:', config.method?.toUpperCase());

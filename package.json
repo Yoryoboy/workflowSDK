@@ -1,18 +1,36 @@
 {
-  "name": "workflowSDK",
+  "name": "workflow-sdk",
   "version": "1.0.0",
-  "description": "",
+  "description": "SDK moderno en TypeScript para interactuar con la API de Danella Workflow",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "prepublishOnly": "pnpm build",
+    "prepare": "pnpm build",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "vitest run"
   },
-  "keywords": [],
+  "keywords": [
+    "danella",
+    "workflow",
+    "sdk",
+    "api",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.4.1",

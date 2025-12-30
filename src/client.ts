@@ -13,6 +13,7 @@ export class DanellaSDK {
 
     this.httpClient = new HttpClient({
       baseURL: baseUrl,
+      debug: config.debug,
     });
 
     this.auth = new AuthResource(this.httpClient, config);

@@ -4,6 +4,7 @@ export interface DanellaConfig {
   employeeId: number;
   name?: string;
   baseUrl?: string;
+  debug?: boolean;
 }
 
 export const DEFAULT_BASE_URL = 'https://danella-x.com';

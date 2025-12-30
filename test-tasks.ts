@@ -33,7 +33,7 @@ async function testTasksEndpoints() {
     // // Test 1: Get project secondary fields
     // console.log('[TEST 1] Obtener campos secundarios del proyecto');
     // try {
-    //   const projectId = 16;
+    //   const projectId = 1;
     //   const fields = await client.tasks.getProjectSecondaryFields(projectId);
     //   console.log(fields);
     //   console.log(
@@ -56,31 +56,31 @@ async function testTasksEndpoints() {
     //   console.log('[ERROR] Error al obtener tareas:', (error as Error).message);
     // }
 
-    // Test 3: Get task by ID
-    console.log('\n[TEST 3] Obtener tarea por ID');
-    try {
-      const taskId = 6394;
-      const task = await client.tasks.getById(taskId);
-      console.log(`[SUCCESS] Se obtuvo la tarea ${taskId}`);
-      console.log('Detalles de la tarea:', task);
-    } catch (error) {
-      console.log('[ERROR] Error al obtener tarea:', (error as Error).message);
-    }
-
-    // // Test 4: Update/Create task
-    // console.log('\n[TEST 4] Actualizar/Crear tarea');
+    // // Test 3: Get task by ID
+    // console.log('\n[TEST 3] Obtener tarea por ID');
     // try {
-    //   const newTask = await client.tasks.update({
-    //     subProjectID: 45,
-    //     jobID: 'TEST-001',
-    //     estimatedClosingDate: new Date().toISOString(),
-    //     verifierKeyID: 'JB0000001',
-    //   });
-    //   console.log('[SUCCESS] Tarea creada/actualizada exitosamente');
-    //   console.log('Tarea:', newTask);
+    //   const taskId = 6394;
+    //   const task = await client.tasks.getById(taskId);
+    //   console.log(`[SUCCESS] Se obtuvo la tarea ${taskId}`);
+    //   console.log('Detalles de la tarea:', task);
     // } catch (error) {
-    //   console.log('[ERROR] Error al actualizar tarea:', (error as Error).message);
+    //   console.log('[ERROR] Error al obtener tarea:', (error as Error).message);
     // }
+
+    // Test 4: Update/Create task
+    console.log('\n[TEST 4] Actualizar/Crear tarea');
+    try {
+      const newTask = await client.tasks.update({
+        subProjectID: 41,
+        jobID: 'TEST-001',
+        verifierKeyID: 'VER-001',
+      });
+      console.log('[SUCCESS] Tarea creada/actualizada exitosamente');
+      console.log('Tarea:', newTask);
+    } catch (error) {
+      console.log('[ERROR] Error al actualizar tarea:', (error as Error).message);
+      console.log('Error details:', error);
+    }
 
     console.log('\n[DONE] Todas las pruebas completadas');
   } catch (error) {

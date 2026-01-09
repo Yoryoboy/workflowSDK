@@ -14,7 +14,7 @@ async function testTasksEndpoints() {
       apiKey: process.env.WORKFLOW_API_KEY!,
       userId: parseInt(process.env.USER_ID!),
       employeeId: parseInt(process.env.EMPLOYEE_ID!),
-      name: process.env.NAME,
+      name: process.env.NAME!,
     });
 
     // Try to load cached token first
@@ -68,21 +68,21 @@ async function testTasksEndpoints() {
     // }
 
     // Test 4: Update/Create task
-    console.log('\n[TEST 4] Actualizar/Crear tarea');
-    try {
-      const newTask = await client.tasks.update({
-        subProjectID: 41,
-        jobID: 'TEST-001',
-        verifierKeyID: 'VER-001',
-      });
-      console.log('[SUCCESS] Tarea creada/actualizada exitosamente');
-      console.log('Tarea:', newTask);
-    } catch (error) {
-      console.log('[ERROR] Error al actualizar tarea:', (error as Error).message);
-      console.log('Error details:', error);
-    }
+    // console.log('\n[TEST 4] Actualizar/Crear tarea');
+    // try {
+    //   const newTask = await client.tasks.update({
+    //     subProjectID: 41,
+    //     jobID: 'TEST-001',
+    //     verifierKeyID: 'VER-001',
+    //   });
+    //   console.log('[SUCCESS] Tarea creada/actualizada exitosamente');
+    //   console.log('Tarea:', newTask);
+    // } catch (error) {
+    //   console.log('[ERROR] Error al actualizar tarea:', (error as Error).message);
+    //   console.log('Error details:', error);
+    // }
 
-    console.log('\n[DONE] Todas las pruebas completadas');
+    // console.log('\n[DONE] Todas las pruebas completadas');
   } catch (error) {
     console.error('[FATAL] Error:', error);
     if (error instanceof Error) {

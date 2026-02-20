@@ -1,6 +1,6 @@
 {
   "name": "workflow-sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "SDK moderno en TypeScript para interactuar con la API de Danella Workflow",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

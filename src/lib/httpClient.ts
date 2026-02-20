@@ -32,9 +32,14 @@ export class HttpClient {
   }
 
   private setupInterceptors(): void {
-    // Request interceptor: inject token if available
+    // Request interceptor: auto-login if no token, then inject token
     this.axiosInstance.interceptors.request.use(
-      (config) => {
+      async (config) => {
+        if (!this.token && this.refreshTokenCallback) {
+          const newToken = await this.refreshTokenCallback();
+          this.token = newToken;
+        }
+
         if (this.token) {
           config.headers.Authorization = `Bearer ${this.token}`;
         }

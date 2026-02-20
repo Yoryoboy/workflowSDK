@@ -3,7 +3,6 @@ export interface DanellaConfig {
   userId: number;
   employeeId: number;
   name: string;
-  baseUrl?: string;
   debug?: boolean;
 }
 

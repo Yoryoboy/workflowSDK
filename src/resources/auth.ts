@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { HttpClient } from '../lib/httpClient';
-import { DanellaConfig } from '../config';
+import { DanellaConfig, AUTH_ENDPOINT } from '../config';
 
 export interface TokenRequest {
   apiKey: string;
@@ -33,10 +33,7 @@ export class AuthResource {
       name: this.config.name,
     };
 
-    const response = await axios.post<TokenResponse>(
-      'https://outerapi.onrender.com/auth/token',
-      payload,
-    );
+    const response = await axios.post<TokenResponse>(AUTH_ENDPOINT, payload);
 
     const data = response.data;
 

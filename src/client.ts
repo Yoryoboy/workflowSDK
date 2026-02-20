@@ -9,10 +9,8 @@ export class DanellaSDK {
   public tasks: TasksResource;
 
   constructor(config: DanellaConfig) {
-    const baseUrl = config.baseUrl || DEFAULT_BASE_URL;
-
     this.httpClient = new HttpClient({
-      baseURL: baseUrl,
+      baseURL: DEFAULT_BASE_URL,
       debug: config.debug,
     });
 
